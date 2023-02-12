@@ -11,9 +11,13 @@ export default function QuestionModal(props) {
     const [index, setIndex] = useState(null)
     const [question, setQuestion] = useState('')
     const [time, setTime] = useState(30)
-    const [answers, setAnswers] = useState([answer, answer])
+    const [answers, setAnswers] = useState([answer, answer, answer, answer])
 
     const addAnswer = () => {
+        if(answers.length >= 4) {
+            toast.error("maximum answers is 4")
+            return
+        }
         setAnswers(answers.concat(answer))
     }
 
@@ -97,6 +101,7 @@ export default function QuestionModal(props) {
         const q = modalState.data
         if (q !== null && q.question !== null) {
             setQuestion(q.question.text)
+            setTime(q.question.time)
             setAnswers(q.question.answers)
             setIndex(q.index)
         }
@@ -116,18 +121,18 @@ export default function QuestionModal(props) {
                     : {}
             }
         >
-            <div className="modal-box overflow-y-auto max-h-screen">
+            <div className="modal-box overflow-y-auto max-h-screen w-11/12 max-w-7xl">
                 <div className="form-control">
                     <label className="label">
                         <span className="label-text">Question</span>
                     </label>
-                    <input
-                        type="text"
+                    <textarea
                         placeholder="question"
-                        className="input input-bordered"
+                        className="textarea textarea-bordered"
                         name="name"
                         value={question}
                         onChange={e => setQuestion(e.target.value)}
+                        rows={3}
                     />
                 </div>
                 <div className='mt-6 flex flex-row justify-between items-center'>
@@ -185,13 +190,13 @@ export default function QuestionModal(props) {
                         onClick={handleSubmit}
                         className="btn btn-primary"
                     >
-                        Simpan
+                        Save
                     </div>
                     <div
                         onClick={handleCancel}
                         className="btn btn-secondary"
                     >
-                        Batal
+                        Cancel
                     </div>
                 </div>
             </div>

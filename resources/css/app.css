@@ -27,3 +27,8 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
   }
+
+.outlined-text {
+    text-shadow: 
+        1px 1px 3px #000;
+}

@@ -19,4 +19,19 @@ class QuizSession extends Model
         'quiz_id',
         'code',
     ];
+
+    public function participants()
+    {
+        return $this->hasMany(QuizParticipant::class);
+    }
+
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class);
+    }
+
+    public function scopeActive($query) 
+    {
+        return $query->where(['is_live' => 1]);
+    }
 }

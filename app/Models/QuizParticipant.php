@@ -21,4 +21,9 @@ class QuizParticipant extends Model
     {
         return $this->belongsTo(QuizSession::class);
     }
+
+    public function answers()
+    {
+        return $this->hasMany(QuizParticipantAnswer::class);
+    }
 }

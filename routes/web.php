@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizSessionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,10 +20,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/', [PlayerController::class, 'index'])->name('player.index');
+Route::post('/answer', [PlayerController::class, 'answer'])->name('player.answer');
+Route::post('/code', [PlayerController::class, 'code'])->name('player.code');
+Route::post('/', [PlayerController::class, 'join'])->name('player.join');
+Route::post('/end', [PlayerController::class, 'end'])->name('player.end');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [GeneralController::class, 'index'])->name('dashboard');
@@ -41,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/quizzes/{quiz}', [QuizController::class, 'edit'])->name('quizzes.edit');
     Route::put('/quizzes/{quiz}', [QuizController::class, 'update'])->name('quizzes.update');
     Route::delete('/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('quizzes.destroy');
+
+    Route::get('/quizzes/{quiz}/start', [QuizSessionController::class, 'index'])->name('quizzes.start');
+    Route::post('/quizzes/{quiz}/next', [QuizSessionController::class, 'next'])->name('quizzes.next');
+    Route::post('/quizzes/{quiz}/destroy', [QuizSessionController::class, 'destroy'])->name('quizzes.destroy');
 });
 
 require __DIR__.'/auth.php';

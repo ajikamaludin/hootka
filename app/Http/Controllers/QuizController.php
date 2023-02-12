@@ -75,7 +75,8 @@ class QuizController extends Controller
             }
         }
 
-        return redirect()->route('quizzes.index');
+        return redirect()->route('quizzes.index')
+                    ->with('message', ['type' => 'success', 'message' => 'The data has beed saved']);
     }
 
     /**
@@ -131,7 +132,8 @@ class QuizController extends Controller
             }
         }
 
-        return redirect()->route('quizzes.index');
+        return redirect()->route('quizzes.index')
+                ->with('message', ['type' => 'success', 'message' => 'The data has beed updated']);
     }
 
     /**

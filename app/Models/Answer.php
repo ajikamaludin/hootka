@@ -31,7 +31,7 @@ class Answer extends Model
             1 => '#1368ce',
             2 => '#d89e02',
             3 => '#27890d',
-            default => fn() => Faker::create()->safeHexColor(),
+            default => Faker::create()->safeHexColor(),
         };
     }
 }

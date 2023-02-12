@@ -7,6 +7,8 @@ import { useModalState } from '@/Hooks'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import Pagination from '@/Components/Pagination'
 import ModalConfirm from '@/Components/ModalConfirm'
+import { AdjustmentIcon } from '@/Components/Icons'
+import ModalConfirmStart from './ModalConfirmStart'
 
 export default function Index(props) {
     const { data: quizzes, links } = props.quizzes
@@ -20,12 +22,25 @@ export default function Index(props) {
         confirmModal.toggle()
     }
 
+    const confirmStartModal = useModalState(false)
+    const handleStart = (quiz) => {
+        confirmStartModal.setData(quiz)
+        confirmStartModal.toggle()
+    }
+
     const onDelete = () => {
         const quiz = confirmModal.data
         if(quiz != null) {
             router.delete(route('quizzes.destroy', quiz), {
                 onSuccess: () => toast.success('The Data has been deleted'),
             })
+        }
+    }
+
+    const onStart = () => {
+        const quiz = confirmStartModal.data
+        if(quiz != null) {
+            router.get(route('quizzes.start', quiz))
         }
     }
 
@@ -77,7 +92,7 @@ export default function Index(props) {
                                 />
                             </div>
                         </div>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto pb-40">
                             <table className="table w-full table-zebra">
                                 <thead>
                                     <tr>
@@ -93,25 +108,49 @@ export default function Index(props) {
                                             <th>{quiz.id}</th>
                                             <td>{quiz.name}</td>
                                             <td>{quiz.creator?.name}</td>
-                                            <td className="text-right">
-                                                {canUpdate && (
-                                                    <Link
-                                                        href={route("quizzes.edit", quiz)}
-                                                        className="btn btn-primary mx-1"
-                                                    >
-                                                        Edit
-                                                    </Link>
-                                                )}
-                                                {canDelete && (
-                                                    <div
-                                                        className="btn btn-secondary mx-1"
-                                                        onClick={() =>
-                                                            handleDelete(quiz)
-                                                        }
-                                                    >
-                                                        Delete
-                                                    </div>
-                                                )}
+                                            <td className="text-right items-center flex justify-end">
+                                                <div
+                                                    className="btn btn-secondary mx-1"
+                                                    onClick={() =>
+                                                        handleStart(quiz)
+                                                    }
+                                                >
+                                                    Start
+                                                </div>
+                                                <div className="dropdown dropdown-end">
+                                                    <label tabIndex={0} className="btn m-1">
+                                                        <AdjustmentIcon/>
+                                                    </label>
+                                                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                        {canUpdate && (
+                                                            <li>
+                                                                <Link
+                                                                    href={route("quizzes.edit", quiz)}
+                                                                >
+                                                                    Edit
+                                                                </Link>
+                                                            </li>
+                                                        )}
+                                                        <li>
+                                                            <Link
+                                                                href={route("quizzes.edit", quiz)}
+                                                            >
+                                                                Detail
+                                                            </Link>
+                                                        </li>
+                                                        {canDelete && (
+                                                            <li>
+                                                                <div
+                                                                    onClick={() =>
+                                                                        handleDelete(quiz)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </div>
+                                                            </li>
+                                                        )}
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -126,6 +165,11 @@ export default function Index(props) {
                 isOpen={confirmModal.isOpen}
                 toggle={confirmModal.toggle}
                 onConfirm={onDelete}
+            />
+            <ModalConfirmStart
+                isOpen={confirmStartModal.isOpen}
+                toggle={confirmStartModal.toggle}
+                onConfirm={onStart}
             />
         </AuthenticatedLayout>
     )

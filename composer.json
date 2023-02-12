@@ -12,6 +12,7 @@
         "laravel/framework": "^9.48",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
+        "pusher/pusher-php-server": "^7.2",
         "react/async": "^4",
         "shiftonelabs/laravel-cascade-deletes": "^1.0",
         "tightenco/ziggy": "^1.0"

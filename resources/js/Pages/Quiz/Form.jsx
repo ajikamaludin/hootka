@@ -54,7 +54,6 @@ export default function FormQuiz(props) {
         } ))
     }
 
-    console.log(data)
     useEffect(() => {
         if(quiz !== undefined) {
             setData({
@@ -173,11 +172,11 @@ export default function FormQuiz(props) {
                             
                             <div className="flex items-center justify-between mt-4">
                                 <PrimaryButton processing={processing}>
-                                    Simpan
+                                    Save
                                 </PrimaryButton>
 
                                 <Link href={route('quizzes.index')} className="btn btn-outline">
-                                    Batal
+                                    Back
                                 </Link>
                             </div>
                         </form>
