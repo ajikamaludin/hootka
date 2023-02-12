@@ -1,5 +1,4 @@
 import React from 'react';
-import "@fullcalendar/react/dist/vdom";
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head,Link } from '@inertiajs/react';
