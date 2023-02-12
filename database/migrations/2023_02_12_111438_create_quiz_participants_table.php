@@ -20,6 +20,7 @@ return new class extends Migration
             $table->smallInteger('score')->default(0);
             $table->string('color')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

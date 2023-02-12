@@ -9,6 +9,7 @@ import { usePage } from '@inertiajs/react';
 
 const rs = [
     {name: "Dashboard", route: "dashboard", show: true},
+    {name: "Quiz", route: "quizzes.index", show: true},
     {name: "User", show: true, items: [
         {name:"User", route: "users.index", show: true, permission: 'view-user'},
         {name:"Role", route: "roles.index", show: true, permission: 'view-role'},

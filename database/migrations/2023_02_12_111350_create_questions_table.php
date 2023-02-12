@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('time')->default(0);
             $table->foreignId('quiz_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

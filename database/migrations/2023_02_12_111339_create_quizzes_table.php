@@ -19,6 +19,7 @@ return new class extends Migration
             $table->smallInteger('is_open')->default(0);
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

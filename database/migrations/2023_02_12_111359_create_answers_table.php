@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('question_id')->constrained();
-            $table->smallInteger('is_corrent')->default(0);
+            $table->smallInteger('is_correct')->default(0);
             $table->text('text')->nullable();
             $table->string('shape')->nullable();
+            $table->string('color')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

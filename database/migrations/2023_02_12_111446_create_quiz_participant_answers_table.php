@@ -21,6 +21,7 @@ return new class extends Migration
             $table->smallInteger('score')->default(0);
             $table->smallInteger('is_correct')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
