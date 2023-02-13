@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Events\GameEvent;
+use App\Models\Answer;
 use App\Models\Quiz;
+use App\Models\QuizParticipant;
+use App\Models\QuizParticipantAnswer;
 use App\Models\QuizSession;
 use Illuminate\Http\Request;
 
@@ -14,29 +17,31 @@ class PlayerController extends Controller
         $session = null;
         $quiz = null;
         $guest = null;
+        $score = 0;
 
-        if(session()->has('session')) {
-            $id = session('session')->id;
-            $session = QuizSession::find($id);
-            session(['session' => $session]);
+        if(session()->has('session_id')) {
+            $session = QuizSession::find(session('session_id'));
             $quiz = $session->quiz->load(['questions.answers']);
         }
 
         if(session()->has('guest')) {
             $guest = session('guest');
+            $guest = QuizParticipant::find($guest->id);
+            $score = $guest->score;
         }
-
+    
         return inertia('Player/Index', [
             'session' => $session,
             'quiz' => $quiz,
             'guest' => $guest,
+            '_score' => $score
         ]);
     }
 
 
     public function code(Request $request) 
     {
-        if(session('session') != null) {
+        if(session('session_id') != null) {
             return;
         }
 
@@ -51,25 +56,9 @@ class PlayerController extends Controller
                 ->with('message', ['type' => 'error', 'message' => 'Quiz not started yet']);
         }
 
-        session(['session' => $session]);
-    }
-
-    public function answer(Request $request)
-    {
-        $request->validate([
-            'answer' => 'required'
-        ]);
-
-        $id = session('session')->id;
-        $session = QuizSession::find($id);
-        session(['session' => $session]);
-
-        $participant = session('guest');
-        $participant->answers()->firstOrCreate([
-            'question_id' => $session->question_present
-        ],
-        [
-            'answer_id' => $request->answer
+        session([
+            'session_id' => $session->id,
+            'session_code' => $session->code
         ]);
     }
 
@@ -84,10 +73,11 @@ class PlayerController extends Controller
             'color' => 'required|string'
         ]);
 
-        $session = session('session');
+        $session = QuizSession::find(session('session_id'));
         $participant = $session->participants()->create([
             'name' => $request->name,
-            'color' => $request->color
+            'color' => $request->color,
+            'score' => 0
         ]);
 
         session(['guest' => $participant]);
@@ -95,10 +85,52 @@ class PlayerController extends Controller
         GameEvent::dispatch($session->code, GameEvent::PLAYER_JOIN, $session->participants()->get());
     }
 
+    public function answer(Request $request)
+    {
+        $request->validate([
+            'answer' => 'required'
+        ]);
+
+        $session = QuizSession::find(session('session_id'));
+        $participant = session('guest');
+
+        $answered = $participant->answers()->where('question_id', $session->question_present)->first();
+        if ($answered == null) {
+            $score = 0;
+            $answerKey = Answer::where([
+                ['question_id', '=',$session->question_present],
+                ['id', '=',$request->answer]
+            ])->first();
+
+            $participants = $session->participants()->pluck('id');
+            $answerCorrected = QuizParticipantAnswer::whereIn('quiz_participant_id', $participants->toArray())
+                                    ->where('question_id', $session->question_present)
+                                    ->where('is_correct', 1)->count();
+
+            if ($answerKey->is_correct === 1) {
+                $score = ((1 - ($answerCorrected / $participants->count())) * 1500) + rand(1,99);
+                $participant->update(['score' => $participant->score + $score]);
+            }
+
+            $participant->answers()->create([
+                'question_id' => $session->question_present,
+                'answer_id' => $request->answer,
+                'score' => $score,
+                'is_correct' => $answerKey->is_correct
+            ]);
+        }
+
+        $answer = QuizParticipantAnswer::whereIn('quiz_participant_id', $participants->toArray())
+                                ->where('question_id', $session->question_present)->count();
+
+        GameEvent::dispatch($session->code, GameEvent::PLAYER_ANSWER, $answer);
+    }
+
     public function end()
     {
         session()->remove('guest');
-        session()->remove('session');
+        session()->remove('session_id');
+        session()->remove('session_code');
         return redirect('/');
     }
 }

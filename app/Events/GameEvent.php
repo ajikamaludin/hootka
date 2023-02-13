@@ -17,6 +17,7 @@ class GameEvent implements ShouldBroadcast
     const PLAYER_JOIN = 'player-join';
     const NEXT = 'next';
     const GAME_OVER = 'end';
+    const PLAYER_ANSWER = 'player-answer';
 
     protected $code;
     public $event;

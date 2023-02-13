@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\GameEvent;
 use App\Models\Quiz;
+use App\Models\QuizParticipantAnswer;
 use App\Models\QuizSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -23,9 +24,13 @@ class QuizSessionController extends Controller
             ]);
         }
 
+        $participantIds = $session->participants()->pluck('id')->toArray();
+        $answer = QuizParticipantAnswer::whereIn('quiz_participant_id', $participantIds)->where('question_id', $session->question_present)->count();
+
         return inertia('Session/Index', [
             'session' => $session->load(['participants']),
-            'quiz' => $quiz->load(['questions.answers'])
+            'quiz' => $quiz->load(['questions.answers']),
+            '_answer' => $answer
         ]);
     }
 

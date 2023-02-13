@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Head, useForm, Link, router } from '@inertiajs/react';
 
 export default function Dashboard(props) {
-    const { session, quiz } = props
-    const { data, setData } = useForm({
-        participants: session.participants
-    })
+    const { session, quiz, _answer } = props
+    const { data, setData } = useForm({participants: session.participants})
 
     const [question, setQuestion] = useState(null)
     const [timer, setTimer] = useState(0)
+    const [answer, setAnswer] = useState(_answer)
 
     const handleNext = () => {
         let question = null
@@ -19,6 +18,31 @@ export default function Dashboard(props) {
             const index = quiz.questions.findIndex(q => q.id === +session.question_present)
             if(index !== -1) {
                 question = quiz.questions[index + 1]
+            }
+        }
+
+        if(question === undefined) {
+            console.log('pertanyaan habis')
+            setQuestion(null)
+            return
+        }
+
+        setAnswer(0)
+        setQuestion(question)
+        router.post(route("quizzes.next", quiz), {
+            'question_id': question.id
+        })
+    }
+
+    const handleContinue = () => {
+        let question = null
+
+        if(+session.question_present === 0) {
+            question = quiz.questions[+session.question_present]
+        } else {
+            const index = quiz.questions.findIndex(q => q.id === +session.question_present)
+            if(index !== -1) {
+                question = quiz.questions[index]
             }
         }
 
@@ -40,16 +64,16 @@ export default function Dashboard(props) {
         }
     }, [question])
 
-    useEffect(() => {
-        timer > 0 && setTimeout(() => {
-            setTimer(timer - 1)
-            if ((timer - 1) === 0) {
-                // tmp
-                handleNext()
-                // TODO: handle show result
-            }
-        }, 1000);
-    }, [timer])
+    // useEffect(() => {
+    //     timer > 0 && setTimeout(() => {
+    //         setTimer(timer - 1)
+    //         if ((timer - 1) === 0) {
+    //             // tmp
+    //             handleNext()
+    //             // TODO: handle show result
+    //         }
+    //     }, 1000);
+    // }, [timer])
 
     useEffect(() => {
         window.Echo.channel(`hootka-${session.code}`)
@@ -57,6 +81,9 @@ export default function Dashboard(props) {
                 console.log(e)
                 if(e.event === 'player-join') {
                     setData("participants", e.data)
+                }
+                if(e.event === 'player-answer') {
+                    setAnswer(e.data)
                 }
             })
             .error((error) => {
@@ -67,7 +94,6 @@ export default function Dashboard(props) {
         }
     }, [])
 
-    const action = +session.question_present !== 0 ? 'Continue' : 'Start'
     const indexQuestion = question === null ? 0 : quiz.questions.findIndex(q => q.id === question?.id) + 1 
     const len = quiz.questions.length
 
@@ -76,12 +102,13 @@ export default function Dashboard(props) {
             <Head title="Quiz Start" />
 
             {question !== null ? (
-                <div className='mx-auto py-4 px-2 md:px-4 max-w-7xl'>
-                    <div className='text-6xl font-bold mx-auto w-full text-center mt-24'>
-                        {question.text}
+                <div className='mx-auto py-4 px-2 md:px-4'>
+                    <div className='w-full flex flex-row justify-between'>
+                        <div className='text-3xl font-bold'>Time: {timer}</div>
+                        <div className='text-3xl font-bold'>Answer: {answer}</div>
                     </div>
-                    <div className='w-full flex flex-row mt-24'>
-                        <div className='text-5xl font-bold'>{timer}</div>
+                    <div className='text-6xl font-bold mx-auto w-full text-center mt-5 max-w-7xl'>
+                        {question.text}
                     </div>
                     <div className='absolute bottom-20 grid grid-cols-2 w-full left-0 p-10 gap-5'>
                         {question.answers.map(answer => (
@@ -116,12 +143,21 @@ export default function Dashboard(props) {
                             </div>
 
                             <div className='w-full flex flex-row justify-center mt-20'>
-                                <div 
-                                    className='btn btn-primary'
-                                    onClick={() => handleNext()}
-                                >
-                                    {action}
-                                </div>
+                                {+session.question_present === 0 ? (
+                                    <div 
+                                        className='btn btn-primary'
+                                        onClick={() => handleNext()}
+                                    >
+                                        Start
+                                    </div>
+                                ) : (
+                                    <div 
+                                        className='btn btn-primary'
+                                        onClick={() => handleContinue()}
+                                    >
+                                        Continue
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -131,7 +167,8 @@ export default function Dashboard(props) {
                 <div className='flex flex-row w-full justify-between font-bold'>
                     <div>{indexQuestion}/{len}</div>
                     <div className='flex flex-row gap-2 items-center'>
-                        <div>Game Code : {session.code}</div>
+                        <div className='mr-5'>Game Code : {session.code}</div>
+                        <div className='btn btn-outline btn-sm' onClick={() => handleNext()}>Skip</div>
                         <Link href={route("quizzes.destroy", session.quiz_id)} method="post" className='btn btn-outline btn-sm'>End</Link>
                     </div>
                 </div>

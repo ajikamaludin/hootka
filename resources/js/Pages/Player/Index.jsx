@@ -9,9 +9,11 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { animals } from '@/utils';
 
-export default function Login({ app, flash, quiz, session, guest }) {
+export default function Login({ app, flash, quiz, session, guest, _score }) {
     const [question, setQuestion] = useState(null)
 
+    const [score, setScore] = useState(0) 
+    
     const { data, setData, post, processing, errors, reset } = useForm({
         code: '',
         name: animals[Math.floor(Math.random()*animals.length)],
@@ -45,6 +47,10 @@ export default function Login({ app, flash, quiz, session, guest }) {
     }
     
     useEffect(() => {
+        setScore(_score)
+    }, [_score])
+
+    useEffect(() => {
         if (flash.message !== null) {
             toast(flash.message.message, {type: flash.message.type})
         }
@@ -61,7 +67,7 @@ export default function Login({ app, flash, quiz, session, guest }) {
         }
         if(session !== null) {
             console.log('subscribe', session)
-            if(+session.question_present !== 0) {
+            if(+session.question_present !== 0 && guest !== null) {
                 console.log('check question')
                 const question = quiz.questions.find(q => q.id === session.question_present)
                 if(question !== null) {
@@ -102,10 +108,11 @@ export default function Login({ app, flash, quiz, session, guest }) {
             {question !== null && (
                 <div className='w-full h-screen'>
                     <div 
-                        className='w-full text-center font-bold py-3' 
+                        className='w-full flex flex-row font-bold p-3 justify-between outlined-text text-white'
                         style={{backgroundColor: data.color}}
                     >
-                        {data.name}
+                        <div>{data.name}</div>
+                        <div>Score : {score}</div>
                     </div>
                     <div className='grid grid-cols-2 w-full gap-4 p-4 h-max'>
                         {question.answers.map(answer => (
