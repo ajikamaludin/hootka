@@ -28,13 +28,46 @@ class QuizSessionController extends Controller
         $answer = QuizParticipantAnswer::whereIn('quiz_participant_id', $participantIds)
                     ->where('question_id', $session->question_present)->count();
 
-        $currentResult = [];
+        $questions = $session->quiz->questions;
+        $participants = $session->participants()->orderBy('score', 'desc')->get();
+        $currentResult = collect();
+
+        foreach($participants as $i => $p){
+            $right = rand(20, 80);
+            $top = (1 - (($p->score) / ($questions->count() * 1600))) * 89;
+            if($top < 10) {
+                $top = 10;
+            }
+
+            if(in_array($i, [0,1,2]) && $questions->last()->id == $session->question_present) {
+                $top = [5, 10, 10][$i];
+                $right = [50, 55, 45][$i];
+                if($i == 0) {
+                    GameEvent::dispatch($session->code, GameEvent::WINNER, $p->id);
+                }
+            }
+
+            $currentResult->add([
+                'id' => $p->id,
+                'name' => $p->name,
+                'score' => $p->score,
+                'color' => $p->color,
+                'right' => $right.'%',
+                'top' => $top.'%'
+            ]);
+        } 
 
         return inertia('Session/Index', [
             'session' => $session->load(['participants']),
             'quiz' => $quiz->load(['questions.answers']),
-            '_answer' => $answer
+            '_answer' => $answer,
+            '_result' => $currentResult
         ]);
+    }
+
+    public function result(Quiz $quiz) {
+        $session = $quiz->sessions()->active()->first();
+        GameEvent::dispatch($session->code, GameEvent::WAITING, []);
     }
 
     public function next(Request $request, Quiz $quiz) 

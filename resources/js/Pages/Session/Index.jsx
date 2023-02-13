@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Head, useForm, Link, router } from '@inertiajs/react';
-import Crown from '@/Assets/goal.png'
-import Pawn from '@/Assets/player.png'
+import Goal from '@/Assets/goal.png'
+import Player from '@/Assets/player.png'
 
 export default function Dashboard(props) {
-    const { session, quiz, _answer } = props
+    const { session, quiz, _answer, _result} = props
     const { data, setData } = useForm({participants: session.participants})
 
     const [question, setQuestion] = useState(null)
     const [timer, setTimer] = useState(0)
     const [answer, setAnswer] = useState(_answer)
+
+    const [showResult, setShowResult] = useState(false) 
 
     const handleNext = () => {
         let question = null
@@ -24,13 +26,14 @@ export default function Dashboard(props) {
         }
 
         if(question === undefined) {
-            console.log('pertanyaan habis')
+            router.post(route("quizzes.destroy", quiz))
             setQuestion(null)
             return
         }
 
         setAnswer(0)
         setQuestion(question)
+        setTimer(question.time)
         router.post(route("quizzes.next", quiz), {
             'question_id': question.id
         })
@@ -49,36 +52,39 @@ export default function Dashboard(props) {
         }
 
         if(question === undefined) {
-            console.log('pertanyaan habis')
+            showCurrentResult()
             setQuestion(null)
             return
         }
 
         setQuestion(question)
+        setTimer(question.time)
         router.post(route("quizzes.next", quiz), {
             'question_id': question.id
         })
     }
 
-    const showCurrentResult = () => {}
+    const showCurrentResult = () => {
+        router.post(route("quizzes.result", quiz))
+        setShowResult(true)
+    }
+
+    const closeResult = () => {
+        handleNext()
+        setShowResult(false)
+    }
 
     useEffect(() => {
-        if(question !== null) {
-            setTimer(question.time)
-        }
-    }, [question])
-
-    // useEffect(() => {
-    //     timer > 0 && setTimeout(() => {
-    //         setTimer(timer - 1)
-    //         if ((timer - 1) === 0) {
-    //             // tmp
-    //             // handleNext()
-    //             // TODO: handle show result
-    //             showCurrentResult()
-    //         }
-    //     }, 1000);
-    // }, [timer])
+        timer > 0 && setTimeout(() => {
+            setTimer(timer - 1)
+            if ((timer - 1) === 0) {
+                // tmp
+                // handleNext()
+                // TODO: handle show result
+                showCurrentResult()
+            }
+        }, 1000);
+    }, [timer])
 
     useEffect(() => {
         window.Echo.channel(`hootka-${session.code}`)
@@ -106,15 +112,27 @@ export default function Dashboard(props) {
         <div className='bg-base-200 h-screen'>
             <Head title="Quiz Start" />
 
-            <div className='absolute top-0 left-0 h-screen w-full bg-gray-700 bg-opacity-90 z-30 text-white outlined-text'>
-                <img src={Crown} alt="win" className='w-24 right-1/2 absolute top-10 z-50 bg-white'/>
-                <div className='absolute p-1 w-20 bg-red-500 text-center rounded-lg' style={{top: '89%', right:'10%'}}>
-                    <img src={Pawn} alt="player" className='w-full'/>
-                    Aji: 1000
+            {showResult && (
+                <div className='absolute top-0 left-0 h-screen w-full bg-gray-700 bg-opacity-90 z-30 text-white outlined-text'>
+                    <div className='w-24 right-1/2 absolute top-10 bg-white p-1 text-center rounded-lg z-50 text-black'>
+                        <img src={Goal} alt="goal" className='w-full'/>
+                        Goal - Win
+                    </div>
+                    {_result.map((p) => (
+                        <div 
+                            key={p.id}
+                            className='absolute p-1 w-20 text-center rounded-lg z-50' 
+                            style={{top: p.top, right: p.right, backgroundColor: p.color}}
+                        >
+                            <img src={Player} alt="player" className='w-full'/>
+                            {p.name}: {p.score}
+                        </div>
+                    ))}
+                    <div className='bottom-10 right-10 absolute'>
+                        <div className='btn btn-primary' onClick={closeResult}>Close</div>
+                    </div>
                 </div>
-                <img src={Pawn} alt="player" className='absolute w-20 z-50 bg-red-500 rounded-lg' style={{top: '90%', right:'40%'}}/>
-                <img src={Pawn} alt="player" className='w-20 absolute z-50' style={{top: '50%', right:'50%'}}/>
-            </div>
+            )}
             {question !== null ? (
                 <div className='mx-auto py-4 px-2 md:px-4'>
                     <div className='w-full flex flex-row justify-between'>

@@ -49,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/quizzes/{quiz}/start', [QuizSessionController::class, 'index'])->name('quizzes.start');
     Route::post('/quizzes/{quiz}/next', [QuizSessionController::class, 'next'])->name('quizzes.next');
     Route::post('/quizzes/{quiz}/destroy', [QuizSessionController::class, 'destroy'])->name('quizzes.destroy');
+    Route::post('/quizzes/{quiz}/result', [QuizSessionController::class, 'result'])->name('quizzes.result');
+
 });
 
 require __DIR__.'/auth.php';

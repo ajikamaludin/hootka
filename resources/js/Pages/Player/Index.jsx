@@ -8,11 +8,16 @@ import TextInput from '@/Components/TextInput';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { animals } from '@/utils';
+import { CheckRoundIcon, CircleCross } from '@/Components/Icons';
 
 export default function Login({ app, flash, quiz, session, guest, _score }) {
     const [question, setQuestion] = useState(null)
 
-    const [score, setScore] = useState(0) 
+    const [isWaitingHost, setWaitingHost] = useState(false)
+    const [isShowResult, setShowResult] = useState(false)
+    const [isCorrect, setCorrect] = useState(false)
+    const [winner, setWinner] = useState(false)
+    const [score, setScore] = useState(0)
     
     const { data, setData, post, processing, errors, reset } = useForm({
         code: '',
@@ -43,7 +48,17 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
     const submitAnswer = (id) => {
         router.post(route('player.answer'), {
             answer: id
+        }, {
+            onFinish: () => {
+                const answer = question.answers.find(q => q.id === id)
+                if(+answer?.is_correct === 1) {
+                    setCorrect(true)
+                } else {
+                    setCorrect(false)
+                }
+            }
         })
+        setWaitingHost(true)
     }
     
     useEffect(() => {
@@ -57,7 +72,6 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
     }, [flash])
 
     useEffect(() => {
-        console.log('render')
         if (guest !== null) {
             setData({
                 "code": session.code,
@@ -66,7 +80,6 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
             })
         }
         if(session !== null) {
-            console.log('subscribe', session)
             if(+session.question_present !== 0 && guest !== null) {
                 console.log('check question')
                 const question = quiz.questions.find(q => q.id === session.question_present)
@@ -76,18 +89,28 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
             }
             window.Echo.channel(`hootka-${session.code}`)
                 .listen("GameEvent", (e) => {
-                    console.log(e)
                     if(e.event === 'end') {
+                        setShowResult(false)
+                        setWaitingHost(false)
                         setQuestion(null)
                         router.post(route("player.end"))
                         toast.info("Game has been ended")
                         return
                     }
                     if(e.event === 'next') {
-                        console.log(e.data.question_id)
                         const question = quiz.questions.find(q => q.id === e.data.question_id)
                         if(question !== null) {
                             setQuestion(question)
+                            setShowResult(false)
+                        }
+                    }
+                    if(e.event === 'waiting') {
+                        setWaitingHost(false)
+                        setShowResult(true)
+                    }
+                    if(e.event === 'winner') {
+                        if(+e.data === +guest.id) {
+                            setWinner(true)
                         }
                     }
                 })
@@ -101,12 +124,38 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
     }, [session, guest])
 
     const indexQuestion = question === null ? 0 : quiz.questions.findIndex(q => q.id === question?.id) + 1 
-    const len = quiz.questions.length
+    const len = quiz?.questions.length
 
     return (
         <div>
             <Head title="Join" />
-
+            {isShowResult && (
+                <div className='absolute bg-gray-700 bg-opacity-95 w-full h-screen'>
+                    <div className='flex w-full flex-col h-screen items-center justify-center'>
+                        {isCorrect ? (
+                            <>
+                                <CheckRoundIcon className='w-32 h-32 text-green-600'/>
+                                <div className='text-green-600 font-bold outlined-text text-4xl'>Score: {score} </div>
+                            </>
+                        ) : (
+                            <div>
+                                <CircleCross className='w-32 h-32 text-red-600'/>
+                            </div>
+                        )}
+                        {winner && (
+                            <div className='text-green-600 font-bold mt-5 outlined-text text-6xl'>WINNER #1</div>
+                        )}
+                    </div>
+                </div>
+            )}
+            {isWaitingHost && (
+                <div className='absolute bg-gray-700 bg-opacity-95 w-full h-screen'>
+                    <div className='flex w-full flex-col h-screen items-center justify-center'>
+                        <div className='loader animate-spin'></div>
+                        <div className='text-white outlined-text text-xl mt-3'>Waiting Host</div>
+                    </div>
+                </div>
+            )}
             {question !== null && (
                 <div className='w-full h-screen'>
                     <div 
