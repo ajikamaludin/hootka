@@ -31,11 +31,14 @@ export default function Dashboard(props) {
             return
         }
 
-        setAnswer(0)
-        setQuestion(question)
-        setTimer(question.time)
         router.post(route("quizzes.next", quiz), {
             'question_id': question.id
+        }, {
+            onFinish: () => {
+                setAnswer(0)
+                setQuestion(question)
+                setTimer(question.time)
+            }
         })
     }
 
@@ -57,10 +60,13 @@ export default function Dashboard(props) {
             return
         }
 
-        setQuestion(question)
-        setTimer(question.time)
         router.post(route("quizzes.next", quiz), {
             'question_id': question.id
+        }, {
+            onFinish: () => {
+                setQuestion(question)
+                setTimer(question.time)
+            }
         })
     }
 

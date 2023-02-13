@@ -90,6 +90,7 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
             window.Echo.channel(`hootka-${session.code}`)
                 .listen("GameEvent", (e) => {
                     if(e.event === 'end') {
+                        setWinner(false)
                         setShowResult(false)
                         setWaitingHost(false)
                         setQuestion(null)

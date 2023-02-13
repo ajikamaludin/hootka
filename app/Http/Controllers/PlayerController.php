@@ -21,12 +21,18 @@ class PlayerController extends Controller
 
         if(session()->has('session_id')) {
             $session = QuizSession::find(session('session_id'));
+            if($session == null) {
+                return $this->end();
+            }
             $quiz = $session->quiz->load(['questions.answers']);
         }
 
         if(session()->has('guest')) {
             $guest = session('guest');
             $guest = QuizParticipant::find($guest->id);
+            if($guest == null) {
+                return $this->end();
+            }
             $score = $guest->score;
         }
     
@@ -108,7 +114,11 @@ class PlayerController extends Controller
                                     ->where('is_correct', 1)->count();
 
             if ($answerKey->is_correct === 1) {
-                $score = ((1 - ($answerCorrected / $participants->count())) * 1500) + rand(1,99);
+                $scoring = (1 - ($answerCorrected / $participants->count()));
+                if($scoring <= 0.5) {
+                    $scoring += rand(0.3, 0.5); 
+                }
+                $score = ($scoring * 1500) + rand(1,99);
                 $participant->update(['score' => $participant->score + $score]);
             }
 
