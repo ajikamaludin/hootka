@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Head, useForm, Link, router } from '@inertiajs/react';
 import Goal from '@/Assets/goal.png'
 import Player from '@/Assets/player.png'
+import LobbyMusic from '@/Assets/lobby.mp3'
+import PlayMusic from '@/Assets/quiz.mp3'
+import { Muted, Unmuted } from '@/Components/Icons';
 
 export default function Dashboard(props) {
     const { session, quiz, _answer, _result} = props
@@ -13,7 +16,12 @@ export default function Dashboard(props) {
 
     const [showResult, setShowResult] = useState(false) 
 
+    const [audioSrc, setAudioSrc] = useState(LobbyMusic)
+    const [audio, setAudio] = useState(true)
+    const audioRef = useRef()
+
     const handleNext = () => {
+        resetAudioPlay()
         let question = null
 
         if(+session.question_present === 0) {
@@ -43,6 +51,7 @@ export default function Dashboard(props) {
     }
 
     const handleContinue = () => {
+        resetAudioPlay()
         let question = null
 
         if(+session.question_present === 0) {
@@ -72,6 +81,7 @@ export default function Dashboard(props) {
 
     const showCurrentResult = () => {
         router.post(route("quizzes.result", quiz))
+        audioRef.current.pause()
         setShowResult(true)
     }
 
@@ -80,13 +90,26 @@ export default function Dashboard(props) {
         setShowResult(false)
     }
 
+    const resetAudioPlay = () => {
+        setAudioSrc(PlayMusic)
+        audioRef.current.pause()
+        audioRef.current.load()
+        audioRef.current.play()
+    }
+
+    const handleAudio = () => {
+        setAudio(!audio)
+        if(!audio) {
+            audioRef.current.play()
+        } else {
+            audioRef.current.pause()
+        }
+    }
+
     useEffect(() => {
         timer > 0 && setTimeout(() => {
             setTimer(timer - 1)
             if ((timer - 1) === 0) {
-                // tmp
-                // handleNext()
-                // TODO: handle show result
                 showCurrentResult()
             }
         }, 1000);
@@ -117,7 +140,9 @@ export default function Dashboard(props) {
     return (
         <div className='bg-base-200 h-screen'>
             <Head title="Quiz Start" />
-
+            <audio id="audio" loop={true} autoPlay={true} ref={audioRef}> 
+                <source src={audioSrc} type="audio/mpeg"/>
+            </audio>
             {showResult && (
                 <div className='absolute top-0 left-0 h-screen w-full bg-gray-700 bg-opacity-90 z-30 text-white outlined-text'>
                     <div className='w-24 right-1/2 absolute top-10 bg-white p-1 text-center rounded-lg z-50 text-black'>
@@ -205,6 +230,13 @@ export default function Dashboard(props) {
                 <div className='flex flex-row w-full justify-between font-bold'>
                     <div>{indexQuestion}/{len}</div>
                     <div className='flex flex-row gap-2 items-center'>
+                        <div className='btn btn-outline btn-sm' onClick={() => handleAudio()}>
+                            {audio ? (
+                                <Unmuted/>
+                            ) : (
+                                <Muted/>
+                            )}
+                        </div>
                         <div className='mr-5'>Game Code : {session.code}</div>
                         <div className='btn btn-outline btn-sm' onClick={() => handleNext()}>Skip</div>
                         <Link href={route("quizzes.destroy", session.quiz_id)} method="post" className='btn btn-outline btn-sm'>End</Link>
