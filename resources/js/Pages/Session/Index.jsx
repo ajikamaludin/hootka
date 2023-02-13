@@ -147,7 +147,7 @@ export default function Dashboard(props) {
                 <div className='absolute top-0 left-0 h-screen w-full bg-gray-700 bg-opacity-90 z-30 text-white outlined-text'>
                     <div className='w-24 right-1/2 absolute top-10 bg-white p-1 text-center rounded-lg z-50 text-black'>
                         <img src={Goal} alt="goal" className='w-full'/>
-                        Goal - Win
+                        Finish - Win
                     </div>
                     {_result.map((p) => (
                         <div 

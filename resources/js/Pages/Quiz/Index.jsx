@@ -70,7 +70,7 @@ export default function Index(props) {
             <Head title="Quiz" />
             <div className="flex flex-col w-full sm:px-6 lg:px-8 space-y-2">
                 <div className="card bg-base-100 w-full">
-                    <div className="card-body">
+                    <div className="card-body pb-40">
                         <div className="flex w-full mb-4 justify-between">
                             {canCreate && (
                                 <Link
@@ -133,7 +133,7 @@ export default function Index(props) {
                                                         )}
                                                         <li>
                                                             <Link
-                                                                href={route("quizzes.edit", quiz)}
+                                                                href={route("quizzes.detail", quiz)}
                                                             >
                                                                 Detail
                                                             </Link>
@@ -157,7 +157,9 @@ export default function Index(props) {
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination links={links} />
+                        <div className='w-full flex justify-center -mt-40'>
+                            <Pagination links={links} />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import qs from 'qs'
 const PageLink = ({ active, label, url, params }) => {
     const className = `mr-1 mb-1 px-4 py-3 border border-solid border-gray-300 rounded text-sm bg-white hover:bg-white ${
         active &&
-        'focus:outline-none focus:border-indigo-700 focus:text-indigo-700 border-indigo-600 bg-indigo-600 text-white hover:bg-indigo-400'
+        'focus:outline-none focus:border-indigo-700 focus:text-indigo-700 border-indigo-600 bg-indigo-600 text-black hover:bg-indigo-400'
     }`
 
     const onClick = () => {
@@ -30,7 +30,7 @@ const PageLink = ({ active, label, url, params }) => {
 // and dots, if exists (...)
 const PageInactive = ({ label }) => {
     const className =
-        'mr-1 mb-1 px-4 py-3 text-sm border rounded border-solid border-gray-300 text-gray'
+        'mr-1 mb-1 px-4 py-3 text-sm border rounded border-solid border-gray-300 text-gray-300'
     return (
         <div
             className={className}

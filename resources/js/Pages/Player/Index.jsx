@@ -104,15 +104,18 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
                             setQuestion(question)
                             setShowResult(false)
                         }
+                        return
                     }
                     if(e.event === 'waiting') {
                         setWaitingHost(false)
                         setShowResult(true)
+                        return
                     }
                     if(e.event === 'winner') {
                         if(+e.data === +guest.id) {
                             setWinner(true)
                         }
+                        return
                     }
                 })
                 .error((error) => {
@@ -180,6 +183,22 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
                 </div>
             )}
 
+            {(question === null && +session?.question_present === 0 && guest !== null) && (
+                <div className='absolute bg-gray-700 bg-opacity-95 z-50 w-full h-screen'>
+                    <div className='flex w-full flex-col h-screen items-center justify-center'>
+                        <div className='loader animate-spin'></div>
+                        <div className='text-white outlined-text text-xl mt-3'>Waiting Host</div>
+                        <div 
+                            className='w-32 px-5 text-center font-bold py-3 mt-10' 
+                            style={{backgroundColor: data.color}}
+                        >
+                            {data.name}
+                        </div>
+                        <Link href={route("player.end")} method="post" className='btn mt-10'> Cancel </Link>
+                    </div>
+                </div>
+            )}
+
             {question === null && (
                 <GuestLayout>
                     <div className='mx-auto mt-5 mb-10'>
@@ -189,22 +208,6 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
                             </ApplicationLogo>
                         </Link>
                     </div>
-                    
-
-                    {(+session?.question_present === 0 && guest !== null) && (
-                        <>
-                            <div 
-                                className='w-full text-center font-bold py-3' 
-                                style={{backgroundColor: data.color}}
-                            >
-                                {data.name}
-                            </div>
-                            <div className='loading btn btn-outline mt-3'>
-                                Waiting Host
-                            </div>
-                            <Link href={route("player.end")} method="post" className='btn mt-10'> Cancel </Link>
-                        </>
-                    )}
 
                     {(session !== null && guest === null) && (
                         <form onSubmit={join} >

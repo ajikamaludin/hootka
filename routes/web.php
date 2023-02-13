@@ -3,6 +3,7 @@
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizDetailController;
 use App\Http\Controllers\QuizSessionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -45,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/quizzes/{quiz}', [QuizController::class, 'edit'])->name('quizzes.edit');
     Route::put('/quizzes/{quiz}', [QuizController::class, 'update'])->name('quizzes.update');
     Route::delete('/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('quizzes.destroy');
+
+    Route::get('/quizzes/{quiz}/{session}/participants', [QuizDetailController::class, 'participants'])->name('quizzes.participants');
+    Route::get('/quizzes/{quiz}/detail', [QuizDetailController::class, 'index'])->name('quizzes.detail');
 
     Route::get('/quizzes/{quiz}/start', [QuizSessionController::class, 'index'])->name('quizzes.start');
     Route::post('/quizzes/{quiz}/next', [QuizSessionController::class, 'next'])->name('quizzes.next');
