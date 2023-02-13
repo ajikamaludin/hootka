@@ -100,9 +100,11 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
         }
     }, [session, guest])
 
+    const indexQuestion = question === null ? 0 : quiz.questions.findIndex(q => q.id === question?.id) + 1 
+    const len = quiz.questions.length
+
     return (
         <div>
-            
             <Head title="Join" />
 
             {question !== null && (
@@ -112,6 +114,7 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
                         style={{backgroundColor: data.color}}
                     >
                         <div>{data.name}</div>
+                        <div>{indexQuestion}/{len}</div>
                         <div>Score : {score}</div>
                     </div>
                     <div className='grid grid-cols-2 w-full gap-4 p-4 h-max'>

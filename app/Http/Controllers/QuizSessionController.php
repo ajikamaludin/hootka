@@ -25,7 +25,10 @@ class QuizSessionController extends Controller
         }
 
         $participantIds = $session->participants()->pluck('id')->toArray();
-        $answer = QuizParticipantAnswer::whereIn('quiz_participant_id', $participantIds)->where('question_id', $session->question_present)->count();
+        $answer = QuizParticipantAnswer::whereIn('quiz_participant_id', $participantIds)
+                    ->where('question_id', $session->question_present)->count();
+
+        $currentResult = [];
 
         return inertia('Session/Index', [
             'session' => $session->load(['participants']),
