@@ -94,6 +94,7 @@ class PlayerController extends Controller
         $session = QuizSession::find(session('session_id'));
         $participant = session('guest');
 
+        $participants = $session->participants()->pluck('id');
         $answered = $participant->answers()->where('question_id', $session->question_present)->first();
         if ($answered == null) {
             $score = 0;
@@ -102,7 +103,6 @@ class PlayerController extends Controller
                 ['id', '=',$request->answer]
             ])->first();
 
-            $participants = $session->participants()->pluck('id');
             $answerCorrected = QuizParticipantAnswer::whereIn('quiz_participant_id', $participants->toArray())
                                     ->where('question_id', $session->question_present)
                                     ->where('is_correct', 1)->count();

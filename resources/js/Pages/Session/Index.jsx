@@ -64,16 +64,16 @@ export default function Dashboard(props) {
         }
     }, [question])
 
-    // useEffect(() => {
-    //     timer > 0 && setTimeout(() => {
-    //         setTimer(timer - 1)
-    //         if ((timer - 1) === 0) {
-    //             // tmp
-    //             handleNext()
-    //             // TODO: handle show result
-    //         }
-    //     }, 1000);
-    // }, [timer])
+    useEffect(() => {
+        timer > 0 && setTimeout(() => {
+            setTimer(timer - 1)
+            if ((timer - 1) === 0) {
+                // tmp
+                handleNext()
+                // TODO: handle show result
+            }
+        }, 1000);
+    }, [timer])
 
     useEffect(() => {
         window.Echo.channel(`hootka-${session.code}`)
