@@ -33,15 +33,15 @@ class QuizSessionController extends Controller
         $currentResult = collect();
 
         foreach($participants as $i => $p){
-            $right = rand(20, 80);
-            $top = (1 - (($p->score) / ($questions->count() * 1600))) * 89;
-            if($top < 10) {
-                $top = 10;
+            $top = rand(20, 80);
+            $right = (1 - (($p->score) / ($questions->count() * 1600))) * 89;
+            if($right < 10) {
+                $right = 10;
             }
 
             if(in_array($i, [0,1,2]) && $questions->last()->id == $session->question_present) {
-                $top = [5, 10, 10][$i];
-                $right = [50, 55, 45][$i];
+                $right = [0, 5, 7][$i];
+                $top = [50, 55, 45][$i];
 
                 if($i == 0) {
                     GameEvent::dispatch($session->code, GameEvent::WINNER, $p->id);

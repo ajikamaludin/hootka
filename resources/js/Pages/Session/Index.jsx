@@ -20,6 +20,11 @@ export default function Dashboard(props) {
     const [audio, setAudio] = useState(true)
     const audioRef = useRef()
 
+    const handleSkip = () => {
+        showCurrentResult()
+        // handleNext()
+    }
+
     const handleNext = () => {
         resetAudioPlay()
         let question = null
@@ -92,9 +97,11 @@ export default function Dashboard(props) {
 
     const resetAudioPlay = () => {
         setAudioSrc(PlayMusic)
-        audioRef.current.pause()
-        audioRef.current.load()
-        audioRef.current.play()
+        if(audio) {
+            audioRef.current.pause()
+            audioRef.current.load()
+            audioRef.current.play()
+        }
     }
 
     const handleAudio = () => {
@@ -145,9 +152,8 @@ export default function Dashboard(props) {
             </audio>
             {showResult && (
                 <div className='absolute top-0 left-0 h-screen w-full bg-gray-700 bg-opacity-90 z-30 text-white outlined-text'>
-                    <div className='w-24 right-1/2 absolute top-10 bg-white p-1 text-center rounded-lg z-50 text-black'>
-                        <img src={Goal} alt="goal" className='w-full'/>
-                        Finish - Win
+                    <div className='w-20 h-screen right-0 absolute bg-white p-1 text-center z-50 text-black'>
+                        <div className='rotate-90 absolute top-1/2 right-0 text-4xl font-bold'>Finish</div>
                     </div>
                     {_result.map((p) => (
                         <div 
@@ -159,7 +165,7 @@ export default function Dashboard(props) {
                             {p.name}: {p.score}
                         </div>
                     ))}
-                    <div className='bottom-10 right-10 absolute'>
+                    <div className='bottom-10 right-32 absolute'>
                         <div className='btn btn-primary' onClick={closeResult}>Close</div>
                     </div>
                 </div>
@@ -238,7 +244,7 @@ export default function Dashboard(props) {
                             )}
                         </div>
                         <div className='mr-5'>Game Code : {session.code}</div>
-                        <div className='btn btn-outline btn-sm' onClick={() => handleNext()}>Skip</div>
+                        <div className='btn btn-outline btn-sm' onClick={() => handleSkip()}>Skip</div>
                         <Link href={route("quizzes.destroy", session.quiz_id)} method="post" className='btn btn-outline btn-sm'>End</Link>
                     </div>
                 </div>

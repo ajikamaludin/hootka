@@ -21,7 +21,8 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
     
     const { data, setData, post, processing, errors, reset } = useForm({
         code: '',
-        name: animals[Math.floor(Math.random()*animals.length)],
+        // name: animals[Math.floor(Math.random()*animals.length)],
+        name: '',
         color: '#'+Math.floor(Math.random()*16777215).toString(16)
     });
 
