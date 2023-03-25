@@ -1,6 +1,6 @@
-# Animal Dashboard - Laravel inertiajs
+# Hootka - Laravel inertiajs
 
-This is a project about web application dashboard to record person and animal
+Simple Kahoot Clone to play quiz in class built with laravel inertia echo and soketi  
 
 ## Support me
 
