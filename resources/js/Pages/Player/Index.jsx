@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify'
+import { Head, Link, router, useForm } from '@inertiajs/react';
+
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { animals } from '@/utils';
+import Logo from '@/Assets/logo.jpg';
 import { CheckRoundIcon, CircleCross } from '@/Components/Icons';
+// import ApplicationLogo from '@/Components/ApplicationLogo';
+// import { animals } from '@/utils';
+
 
 export default function Login({ app, flash, quiz, session, guest, _score }) {
     const [question, setQuestion] = useState(null)
@@ -37,6 +40,7 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
     const submit = (e) => {
         e.preventDefault();
         post(route('player.code'))
+        setData('code', '')
         reset()
     };
     
@@ -204,21 +208,21 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
                 <GuestLayout>
                     <div className='mx-auto mt-5 mb-10'>
                         <Link href="/">
-                            <ApplicationLogo className="font-bold text-2xl">
-                                {app.name}
-                            </ApplicationLogo>
+                            <img src={Logo} alt='app logo'/>
                         </Link>
                     </div>
 
                     {(session !== null && guest === null) && (
                         <form onSubmit={join} >
-                            <div 
-                                className='w-full text-center font-bold py-3' 
-                                style={{backgroundColor: data.color}}
-                                onClick={() => changeColor()}
-                            >
-                                {data.name}
-                            </div>
+                            {data.name !== '' && (
+                                <div 
+                                    className='w-full text-center font-bold py-3' 
+                                    style={{backgroundColor: data.color}}
+                                    onClick={() => changeColor()}
+                                >
+                                    {data.name}
+                                </div>
+                            )}
                             <div className='pt-2'>
                                 <InputLabel forInput="code" value="Name" />
 

@@ -5,8 +5,12 @@ import Player from '@/Assets/player.png'
 import LobbyMusic from '@/Assets/lobby.mp3'
 import PlayMusic from '@/Assets/quiz.mp3'
 import { Muted, Unmuted } from '@/Components/Icons';
+import useWindowSize from 'react-use/lib/useWindowSize'
+import Confetti from 'react-confetti'
 
 export default function Dashboard(props) {
+    const { width, height } = useWindowSize()
+
     const { session, quiz, _answer, _result} = props
     const { data, setData } = useForm({participants: session.participants})
 
@@ -21,11 +25,16 @@ export default function Dashboard(props) {
     const audioRef = useRef()
 
     const handleSkip = () => {
+        if (indexQuestion === 0) {
+            return
+        }
+        setTimer(0)
         showCurrentResult()
         // handleNext()
     }
 
     const handleNext = () => {
+        setTimer(0)
         resetAudioPlay()
         let question = null
 
@@ -39,7 +48,7 @@ export default function Dashboard(props) {
         }
 
         if(question === undefined) {
-            router.post(route("quizzes.destroy", quiz))
+            router.post(route("quizzes.end", quiz))
             setQuestion(null)
             return
         }
@@ -113,14 +122,34 @@ export default function Dashboard(props) {
         }
     }
 
+    // useEffect(async () => {
+    //     console.log(timer)
+    //     if (timer > 0) {
+    //         await setTimeout(() => {
+    //             setTimer(timer - 1)
+    //             if ((timer - 1) === 0) {
+    //                 showCurrentResult()
+    //             }
+    //         }, 1000);
+    //     }
+    // }, [timer])
+
     useEffect(() => {
-        timer > 0 && setTimeout(() => {
-            setTimer(timer - 1)
-            if ((timer - 1) === 0) {
-                showCurrentResult()
-            }
-        }, 1000);
-    }, [timer])
+        let intervalId;
+    
+        if (timer > 0) {
+            intervalId = setInterval(() => {
+                setTimer(timer - 1);
+                if ((timer - 1) === 0) {
+                    showCurrentResult()
+                }
+            }, 1000);
+        }
+    
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [timer]);
 
     useEffect(() => {
         window.Echo.channel(`hootka-${session.code}`)
@@ -152,16 +181,21 @@ export default function Dashboard(props) {
             </audio>
             {showResult && (
                 <div className='absolute top-0 left-0 h-screen w-full bg-gray-700 bg-opacity-90 z-30 text-white outlined-text'>
+                    {indexQuestion === len && (
+                        <Confetti
+                            width={width}
+                            height={height}
+                        />
+                    )}
                     <div className='w-20 h-screen right-0 absolute bg-white p-1 text-center z-50 text-black'>
                         <div className='rotate-90 absolute top-1/2 right-0 text-4xl font-bold'>Finish</div>
                     </div>
                     {_result.map((p) => (
                         <div 
                             key={p.id}
-                            className='absolute p-1 w-20 text-center rounded-lg z-50' 
+                            className='absolute p-1 w-20 text-center rounded-lg z-50 text-xl font-bold' 
                             style={{top: p.top, right: p.right, backgroundColor: p.color}}
                         >
-                            <img src={Player} alt="player" className='w-full'/>
                             {p.name}: {p.score}
                         </div>
                     ))}
@@ -245,7 +279,7 @@ export default function Dashboard(props) {
                         </div>
                         <div className='mr-5'>Game Code : {session.code}</div>
                         <div className='btn btn-outline btn-sm' onClick={() => handleSkip()}>Skip</div>
-                        <Link href={route("quizzes.destroy", session.quiz_id)} method="post" className='btn btn-outline btn-sm'>End</Link>
+                        <Link href={route("quizzes.end", {id: session.quiz_id})} method="post" className='btn btn-outline btn-sm'>End</Link>
                     </div>
                 </div>
             </div>

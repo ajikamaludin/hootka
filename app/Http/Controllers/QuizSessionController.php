@@ -32,8 +32,12 @@ class QuizSessionController extends Controller
         $participants = $session->participants()->orderBy('score', 'desc')->get();
         $currentResult = collect();
 
+        $topP = 4;
+        if ($participants->count() <= 5) {
+            $topP = 40;
+        }
         foreach($participants as $i => $p){
-            $top = rand(20, 80);
+            $top = (($i + 1) * $topP); 
             $right = (1 - (($p->score) / ($questions->count() * 1600))) * 89;
             if($right < 10) {
                 $right = 10;
@@ -88,7 +92,7 @@ class QuizSessionController extends Controller
         ]);
     }
 
-    public function destroy(Quiz $quiz)
+    public function end(Quiz $quiz)
     {
         $session = $quiz->sessions()->active()->first();
         GameEvent::dispatch($session->code, GameEvent::GAME_OVER, []);

@@ -40,6 +40,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
+    Route::get('/quizzes/{quiz}/start', [QuizSessionController::class, 'index'])->name('quizzes.start');
+    Route::post('/quizzes/{quiz}/next', [QuizSessionController::class, 'next'])->name('quizzes.next');
+    Route::post('/quizzes/{quiz}/end', [QuizSessionController::class, 'end'])->name('quizzes.end');
+    Route::post('/quizzes/{quiz}/result', [QuizSessionController::class, 'result'])->name('quizzes.result');
+
     Route::get('/quizzes', [QuizController::class, 'index'])->name('quizzes.index');
     Route::get('/quizzes/create', [QuizController::class, 'create'])->name('quizzes.create');
     Route::post('/quizzes', [QuizController::class, 'store'])->name('quizzes.store');
@@ -49,11 +54,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/quizzes/{quiz}/{session}/participants', [QuizDetailController::class, 'participants'])->name('quizzes.participants');
     Route::get('/quizzes/{quiz}/detail', [QuizDetailController::class, 'index'])->name('quizzes.detail');
-
-    Route::get('/quizzes/{quiz}/start', [QuizSessionController::class, 'index'])->name('quizzes.start');
-    Route::post('/quizzes/{quiz}/next', [QuizSessionController::class, 'next'])->name('quizzes.next');
-    Route::post('/quizzes/{quiz}/destroy', [QuizSessionController::class, 'destroy'])->name('quizzes.destroy');
-    Route::post('/quizzes/{quiz}/result', [QuizSessionController::class, 'result'])->name('quizzes.result');
 
 });
 
