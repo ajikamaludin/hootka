@@ -53,11 +53,13 @@ class QuizController extends Controller
             'questions.*.answers' => 'required|array',
             'questions.*.answers.*.text' => 'required|string',
             'questions.*.answers.*.is_correct' => 'required|in:0,1',
+            'answer_key_url' => 'nullable|url',
         ]);
 
         $quiz = Quiz::create([
             'name' => $request->name,
             'user_id' => $request->user()->id,
+            'answer_key_url' => $request->answer_key_url,
         ]);
 
         foreach($request->questions as $rquestion) {
@@ -109,12 +111,14 @@ class QuizController extends Controller
             'questions.*.answers' => 'required|array',
             'questions.*.answers.*.text' => 'required|string',
             'questions.*.answers.*.is_correct' => 'required|in:0,1',
+            'answer_key_url' => 'nullable|url',
         ]);
 
         $quiz->questions()->delete();
         $quiz->update([
             'name' => $request->name,
             'user_id' => $request->user()->id,
+            'answer_key_url' => $request->answer_key_url,
         ]);
 
         foreach($request->questions as $rquestion) {

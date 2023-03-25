@@ -17,6 +17,7 @@ export default function FormQuiz(props) {
     const questionModal = useModalState()
     const { data, setData, post, put, processing, errors } = useForm({
         name: '',
+        answer_key_url: '',
         questions: [],
     });
 
@@ -59,6 +60,7 @@ export default function FormQuiz(props) {
             setData({
                 name: quiz?.name,
                 questions: quiz?.questions,
+                answer_key_url: quiz?.answer_key_url
             })
         }
     }, [quiz]);
@@ -170,6 +172,19 @@ export default function FormQuiz(props) {
                                 </div>
                             </div>
                             
+                            <div className='mt-4'>
+                                <InputLabel forInput="name" value="URL Pembahasan" />
+                                <TextInput
+                                    type="text"
+                                    name="answer_key_url"
+                                    value={data.answer_key_url}
+                                    className="mt-1 block w-full"
+                                    autoComplete={"false"}
+                                    handleChange={onHandleChange}
+                                    isError={errors.answer_key_url}
+                                />
+                                <InputError message={errors.name}/>
+                            </div>
                             <div className="flex items-center justify-between mt-4">
                                 <PrimaryButton processing={processing}>
                                     Save

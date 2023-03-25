@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->smallInteger('is_open')->default(0);
             $table->foreignId('user_id')->constrained();
+            $table->string('answer_key_url');
             $table->timestamps();
             $table->softDeletes();
         });

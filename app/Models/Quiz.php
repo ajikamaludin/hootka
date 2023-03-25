@@ -14,6 +14,7 @@ class Quiz extends Model
         'name',
         'is_open',
         'user_id',
+        'answer_key_url'
     ];
 
     public function questions()

@@ -193,7 +193,7 @@ export default function Dashboard(props) {
                     {_result.map((p) => (
                         <div 
                             key={p.id}
-                            className='absolute p-1 w-20 text-center rounded-lg z-50 text-xl font-bold' 
+                            className='absolute p-1 w-32 text-center rounded-lg z-50 text-xl font-bold' 
                             style={{top: p.top, right: p.right, backgroundColor: p.color}}
                         >
                             {p.name}: {p.score}

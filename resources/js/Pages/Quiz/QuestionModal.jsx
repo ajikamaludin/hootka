@@ -104,7 +104,9 @@ export default function QuestionModal(props) {
             setTime(q.question.time)
             setAnswers(q.question.answers)
             setIndex(q.index)
+            return
         }
+        setIndex(null)
     }, [modalState])
 
     return (

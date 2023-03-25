@@ -120,6 +120,10 @@ class PlayerController extends Controller
                 }
                 $score = ($scoring * 1500) + rand(1,99);
                 $participant->update(['score' => $participant->score + $score]);
+            } else {
+                if($participant->score >= -200) { // min 5 q = 200 / 5 
+                    $participant->update(['score' => $participant->score - 200]);
+                }
             }
 
             $participant->answers()->create([

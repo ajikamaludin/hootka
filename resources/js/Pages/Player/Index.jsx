@@ -154,6 +154,9 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
                         {winner && (
                             <div className='text-green-600 font-bold mt-5 outlined-text text-6xl'>WINNER #1</div>
                         )}
+                        {indexQuestion === len && (
+                            <a href={quiz.answer_key_url} target='_blank' className='py-2 px-4 bg-blue-600 font-bold mt-5 text-white text-1xl '>Pembahasan</a>
+                        )}
                     </div>
                 </div>
             )}
