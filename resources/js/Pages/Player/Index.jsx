@@ -8,6 +8,11 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import Logo from '@/Assets/logo.jpg';
+import guide1 from '@/Assets/guide/1.png';
+import guide2 from '@/Assets/guide/2.png';
+import guide3 from '@/Assets/guide/3.png';
+import guide4 from '@/Assets/guide/4.png';
+import guide5 from '@/Assets/guide/5.png';
 import { CheckRoundIcon, CircleCross } from '@/Components/Icons';
 // import ApplicationLogo from '@/Components/ApplicationLogo';
 // import { animals } from '@/utils';
@@ -16,6 +21,7 @@ import { CheckRoundIcon, CircleCross } from '@/Components/Icons';
 export default function Login({ app, flash, quiz, session, guest, _score }) {
     const [question, setQuestion] = useState(null)
 
+    const [isShowGuide, setShowGuide] = useState(true)
     const [isWaitingHost, setWaitingHost] = useState(false)
     const [isShowResult, setShowResult] = useState(false)
     const [isCorrect, setCorrect] = useState(false)
@@ -138,6 +144,38 @@ export default function Login({ app, flash, quiz, session, guest, _score }) {
     return (
         <div>
             <Head title="Join" />
+            {isShowGuide && (
+                <div className='absolute bg-gray-700 bg-opacity-95 w-full h-screen z-50 top-0'>
+                    <div className='flex w-full flex-col h-screen items-center justify-center'>
+                        <div className="carousel carousel-center max-w-md px-4 space-x-4 bg-neutral rounded-box pb-36">
+                            <div className="carousel-item">
+                                <img src={guide1} className="rounded-box object-fit" />
+                            </div>
+                            <div className="carousel-item">
+                                <img src={guide2} className="rounded-box object-fit" />
+                            </div>
+                            <div className="carousel-item">
+                                <img src={guide3} className="rounded-box object-fit" />
+                            </div>
+                            <div className="carousel-item">
+                                <img src={guide4} className="rounded-box object-fit" />
+                            </div>
+                            <div className="carousel-item">
+                                <img src={guide5} className="rounded-box object-fit" />
+                            </div> 
+                        </div>
+                        <div className='absolute top-5 font-bold text-2xl text-yellow-400 outlined-text'>
+                            Petunjuk Permainan
+                        </div>
+                        <div 
+                            className='absolute bottom-16 py-2 px-4 bg-gray-600 border-blue-500 border-2 font-bold mt-5 text-white text-1xl'
+                            onClick={() => setShowGuide(false)}
+                        >
+                            Close
+                        </div>
+                    </div>
+                </div>
+            )}
             {isShowResult && (
                 <div className='absolute bg-gray-700 bg-opacity-95 w-full h-screen'>
                     <div className='flex w-full flex-col h-screen items-center justify-center'>
