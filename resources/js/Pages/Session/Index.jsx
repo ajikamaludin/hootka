@@ -187,7 +187,7 @@ export default function Dashboard(props) {
                             height={height}
                         />
                     )}
-                    <div className='w-20 h-screen right-0 absolute bg-white p-1 text-center z-50 text-black'>
+                    <div className='w-20 h-screen right-10 absolute bg-white p-1 text-center z-50 text-black'>
                         <div className='rotate-90 absolute top-1/2 right-0 text-4xl font-bold'>Finish</div>
                     </div>
                     {_result.map((p) => (

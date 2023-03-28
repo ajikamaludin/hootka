@@ -17,7 +17,7 @@ import Guide from './Guide';
 export default function Login({ app, flash, quiz, session, guest, _score }) {
     const [question, setQuestion] = useState(null)
 
-    const [isShowGuide, setShowGuide] = useState(false)
+    const [isShowGuide, setShowGuide] = useState(true)
     const [isWaitingHost, setWaitingHost] = useState(false)
     const [isShowResult, setShowResult] = useState(false)
     const [isCorrect, setCorrect] = useState(false)

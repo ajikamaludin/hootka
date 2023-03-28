@@ -43,6 +43,10 @@ class QuizSessionController extends Controller
                 $right = 10;
             }
 
+            if($right > 90) {
+                $right = 89;
+            }
+
             if(in_array($i, [0,1,2]) && $questions->last()->id == $session->question_present) {
                 $right = [0, 5, 7][$i];
                 $top = [50, 55, 45][$i];
