@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Faker\Factory as Faker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Faker\Factory as Faker;
 
 class Answer extends Model
 {
@@ -19,14 +19,14 @@ class Answer extends Model
         'color',
     ];
 
-    public function participantAnswers() 
+    public function participantAnswers()
     {
         return $this->hasMany(QuizParticipantAnswer::class);
     }
 
-    public static function generateColor($key) 
+    public static function generateColor($key)
     {
-        return match($key) {
+        return match ($key) {
             0 => '#e21b3c',
             1 => '#1368ce',
             2 => '#d89e02',

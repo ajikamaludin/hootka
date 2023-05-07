@@ -39,3 +39,9 @@ npm run build
 
 ![Dashboard1](1.png?raw=true)
 ![Dashboard2](2.png?raw=true)
+
+## Rsync 
+
+```bash 
+rsync -arP -e 'ssh -p 222' --exclude=node_modules --exclude=.git --exclude=.env --exclude=storage --exclude=public/hot . pi@ajikamaludin.id:/home/pi/projects/hootka 
+```

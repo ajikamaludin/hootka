@@ -25,22 +25,12 @@ export default function Guide({ isOpen, toggle }) {
                 <div className='font-bold text-2xl text-yellow-400'>
                     Petunjuk Permainan
                 </div>
-                <div className="carousel max-w-md p-4 space-x-4 rounded-box h-96">
-                    <div id="item1" className="carousel-item">
-                        <img src={guide1} className="rounded-box object-fit" />
-                    </div>
-                    <div id="item2" className="carousel-item">
-                        <img src={guide2} className="rounded-box object-fit" />
-                    </div>
-                    <div id="item3" className="carousel-item">
-                        <img src={guide3} className="rounded-box object-fit" />
-                    </div>
-                    <div id="item4" className="carousel-item">
-                        <img src={guide4} className="rounded-box object-fit" />
-                    </div>
-                    <div id="item5" className="carousel-item">
-                        <img src={guide5} className="rounded-box object-fit" />
-                    </div> 
+                <div className="flex flex-nowrap overflow-x-scroll w-full p-4 space-x-4 rounded-box h-96">
+                    <img id="item1" src={guide1} className="h-full w-72 rounded-box" />
+                    <img id="item2" src={guide2} className="h-full w-72 rounded-box" />
+                    <img id="item3" src={guide3} className="h-full w-72 rounded-box" />
+                    <img id="item4" src={guide4} className="h-full w-72 rounded-box" />
+                    <img id="item5" src={guide5} className="h-full w-72 rounded-box" />
                 </div>
                 <div className="flex justify-center w-full py-2 gap-2">
                     <a href="#item1" className="btn btn-xs">1</a> 

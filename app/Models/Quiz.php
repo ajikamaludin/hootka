@@ -14,7 +14,7 @@ class Quiz extends Model
         'name',
         'is_open',
         'user_id',
-        'answer_key_url'
+        'answer_key_url',
     ];
 
     public function questions()
@@ -24,7 +24,7 @@ class Quiz extends Model
 
     public function creator()
     {
-        return $this->belongsTo(User::class, "user_id", "id");
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function sessions()

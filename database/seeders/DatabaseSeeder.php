@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permission::create([
                 'name' => $permission['name'],
-                'label' => $permission['label']
+                'label' => $permission['label'],
             ]);
         }
 
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         // role
         $role = Role::create(['name' => 'admin']);
 
-        $permissions = Permission::all()->map(function ($item) use($role) {
+        $permissions = Permission::all()->map(function ($item) use ($role) {
             return [
                 'role_id' => $role->id,
                 'permission_id' => $item->id,

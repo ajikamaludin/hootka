@@ -3,9 +3,6 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -15,15 +12,23 @@ class GameEvent implements ShouldBroadcast
     use Dispatchable, SerializesModels;
 
     const PLAYER_JOIN = 'player-join';
+
     const NEXT = 'next';
+
     const GAME_OVER = 'end';
+
     const PLAYER_ANSWER = 'player-answer';
+
     const WAITING = 'waiting';
+
     const WINNER = 'winner';
 
     protected $code;
+
     public $event;
+
     public $data;
+
     /**
      * Create a new event instance.
      *

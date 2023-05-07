@@ -2,9 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Document;
-use App\Models\DocumentReminder as ModelsDocumentReminder;
-use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -22,7 +19,6 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
     public function version(Request $request)
@@ -33,7 +29,6 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function share(Request $request)
@@ -43,13 +38,13 @@ class HandleInertiaRequests extends Middleware
         } else {
             $user = null;
         }
-        
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $user,
             ],
             'app' => [
-                'name' => env('APP_NAME', 'Sample')
+                'name' => env('APP_NAME', 'Sample'),
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
@@ -57,12 +52,12 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'flash' => [
-                'message' => fn () => $request->session()->get('message')
+                'message' => fn () => $request->session()->get('message'),
             ],
             'notify' => [
                 'notifications' => [],
-                'notification_has_unread' => 0
-            ]
+                'notification_has_unread' => 0,
+            ],
         ]);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Answer;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class QuizController extends Controller
 {
@@ -40,7 +39,6 @@ class QuizController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -62,13 +60,13 @@ class QuizController extends Controller
             'answer_key_url' => $request->answer_key_url,
         ]);
 
-        foreach($request->questions as $rquestion) {
+        foreach ($request->questions as $rquestion) {
             $question = $quiz->questions()->create([
                 'text' => $rquestion['text'],
                 'time' => $rquestion['time'],
             ]);
 
-            foreach($rquestion['answers'] as $key => $ranswer) {
+            foreach ($rquestion['answers'] as $key => $ranswer) {
                 $question->answers()->create([
                     'is_correct' => $ranswer['is_correct'],
                     'text' => $ranswer['text'],
@@ -78,7 +76,7 @@ class QuizController extends Controller
         }
 
         return redirect()->route('quizzes.index')
-                    ->with('message', ['type' => 'success', 'message' => 'The data has beed saved']);
+            ->with('message', ['type' => 'success', 'message' => 'The data has beed saved']);
     }
 
     /**
@@ -90,14 +88,13 @@ class QuizController extends Controller
     public function edit(Quiz $quiz)
     {
         return inertia('Quiz/Form', [
-            'quiz' => $quiz->load(['questions.answers'])
+            'quiz' => $quiz->load(['questions.answers']),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -121,13 +118,13 @@ class QuizController extends Controller
             'answer_key_url' => $request->answer_key_url,
         ]);
 
-        foreach($request->questions as $rquestion) {
+        foreach ($request->questions as $rquestion) {
             $question = $quiz->questions()->create([
                 'text' => $rquestion['text'],
                 'time' => $rquestion['time'],
             ]);
 
-            foreach($rquestion['answers'] as $key => $ranswer) {
+            foreach ($rquestion['answers'] as $key => $ranswer) {
                 $question->answers()->create([
                     'is_correct' => $ranswer['is_correct'],
                     'text' => $ranswer['text'],
@@ -137,7 +134,7 @@ class QuizController extends Controller
         }
 
         return redirect()->route('quizzes.index')
-                ->with('message', ['type' => 'success', 'message' => 'The data has beed updated']);
+            ->with('message', ['type' => 'success', 'message' => 'The data has beed updated']);
     }
 
     /**

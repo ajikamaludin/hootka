@@ -11,7 +11,7 @@ class Role extends Model
     use HasFactory, CascadesDeletes;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     protected $cascadeDeletes = ['users'];
@@ -30,7 +30,7 @@ class Role extends Model
             'id',
             'id',
             'permission_id',
-        );  
+        );
     }
 
     public function rolePermissions()

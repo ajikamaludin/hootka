@@ -11,6 +11,6 @@ class RolePermission extends Model
 
     protected $fillable = [
         'permission_id',
-        'role_id'
+        'role_id',
     ];
 }

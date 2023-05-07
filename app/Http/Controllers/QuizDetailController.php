@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Quiz;
 use App\Models\QuizSession;
-use Illuminate\Http\Request;
 
 class QuizDetailController extends Controller
 {
-    public function index(Quiz $quiz) 
+    public function index(Quiz $quiz)
     {
         $query = $quiz->sessions()
             ->withCount('participants')

@@ -16,8 +16,8 @@ class GeneralController extends Controller
             'count_user' => User::count(),
             'count_quiz' => Quiz::count(),
             'count_session' => QuizSession::count(),
-            'count_participant' => QuizParticipant::count()
+            'count_participant' => QuizParticipant::count(),
 
-       ]);
+        ]);
     }
 }

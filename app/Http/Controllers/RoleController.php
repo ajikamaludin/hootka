@@ -25,7 +25,6 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -33,14 +32,14 @@ class RoleController extends Controller
         $request->validate([
             'name' => 'required',
             'permissions' => 'required|array',
-            'permissions.*.id' => 'required|exists:permissions,id'
+            'permissions.*.id' => 'required|exists:permissions,id',
         ]);
 
         $role = Role::create([
-            'name' => $request->name
+            'name' => $request->name,
         ]);
 
-        $permissions = collect($request->permissions)->map(function($item) use($role) {
+        $permissions = collect($request->permissions)->map(function ($item) use ($role) {
             return [
                 'role_id' => $role->id,
                 'permission_id' => $item['id'],
@@ -53,7 +52,6 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -62,15 +60,15 @@ class RoleController extends Controller
         $request->validate([
             'name' => 'required',
             'permissions' => 'required|array',
-            'permissions.*.id' => 'required|exists:permissions,id'
+            'permissions.*.id' => 'required|exists:permissions,id',
         ]);
 
         $role->update([
-            'name' => $request->name
+            'name' => $request->name,
         ]);
         $role->rolePermissions()->delete();
-        
-        $permissions = collect($request->permissions)->map(function($item) use($role) {
+
+        $permissions = collect($request->permissions)->map(function ($item) use ($role) {
             return [
                 'role_id' => $role->id,
                 'permission_id' => $item['id'],

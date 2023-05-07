@@ -7,9 +7,7 @@ use App\Http\Controllers\QuizDetailController;
 use App\Http\Controllers\QuizSessionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------

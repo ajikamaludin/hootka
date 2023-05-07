@@ -30,7 +30,7 @@ class QuizSession extends Model
         return $this->belongsTo(Quiz::class);
     }
 
-    public function scopeActive($query) 
+    public function scopeActive($query)
     {
         return $query->where(['is_live' => 1]);
     }
