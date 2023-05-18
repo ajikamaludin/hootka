@@ -43,5 +43,5 @@ npm run build
 ## Rsync 
 
 ```bash 
-rsync -arP -e 'ssh -p 222' --exclude=node_modules --exclude=.git --exclude=.env --exclude=storage --exclude=public/hot . pi@ajikamaludin.id:/home/pi/projects/hootka 
+rsync -arP -e 'ssh -p 224' --exclude=node_modules --exclude=.git --exclude=.env --exclude=storage --exclude=public/hot . arm@ajikamaludin.id:/home/arm/projects/hootka 
 ```
