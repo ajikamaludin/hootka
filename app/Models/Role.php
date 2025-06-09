@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 class Role extends Model
 {
-    use HasFactory, CascadesDeletes;
+    use HasFactory, CascadeSoftDeletes;
 
     protected $fillable = [
         'name',
