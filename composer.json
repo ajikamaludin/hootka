@@ -9,25 +9,25 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "barryvdh/laravel-dompdf": "^3.1.1",
+        "barryvdh/laravel-dompdf": "^3.1.2",
         "guzzlehttp/guzzle": "^7.10.0",
-        "inertiajs/inertia-laravel": "^2.0.21",
-        "laravel/framework": "^12.53.0",
+        "inertiajs/inertia-laravel": "^2.0.22",
+        "laravel/framework": "^13.1.1",
         "laravel/sanctum": "^4.3.1",
-        "laravel/tinker": "^2.11.1",
+        "laravel/tinker": "^3.0",
         "pusher/pusher-php-server": "^7.2.7",
         "react/async": "^4.3",
-        "dyrynda/laravel-cascade-soft-deletes": "^4.5.0",
+        "dyrynda/laravel-cascade-soft-deletes": "dev-l13-compatibility",
         "tightenco/ziggy": "^2.6.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24.1",
-        "laravel/pint": "^1.27.1",
-        "laravel/sail": "^1.53.0",
+        "laravel/pint": "^1.29.0",
+        "laravel/sail": "^1.54.0",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.9.1",
-        "phpunit/phpunit": "^11.5.55",
-        "spatie/laravel-ignition": "^2.11.0"
+        "phpunit/phpunit": "^12.5.14",
+        "spatie/laravel-ignition": "^2.12.0"
     },
     "autoload": {
         "psr-4": {
@@ -41,6 +41,12 @@
             "Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/laravel-shift/laravel-cascade-soft-deletes.git"
+        }
+    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
